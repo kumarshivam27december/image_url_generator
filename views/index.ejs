@@ -15,6 +15,11 @@
       color: #333;
     }
 
+    h3 {
+      color: #666;
+      font-weight: normal;
+    }
+
     form {
       background-color: #fff;
       padding: 20px;
@@ -44,21 +49,34 @@
       margin-top: 20px;
     }
 
-    .image-link a {
-      display: inline-block;
-      margin-top: 10px;
-      font-weight: bold;
-      color: #007BFF;
-      text-decoration: none;
+    .image-link input {
+      width: 60%;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
 
-    .image-link a:hover {
-      text-decoration: underline;
+    .copy-btn {
+      margin-left: 10px;
+      background-color: #28a745;
+    }
+
+    .copy-btn:hover {
+      background-color: #1e7e34;
+    }
+
+    .copied-msg {
+      color: green;
+      margin-top: 10px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <h2>Upload an Image</h2>
+  <h2>Upload an Image (converting image to URL)</h2>
+  <h3>Copy this URL and paste it in the previous form</h3>
+  
   <form action="/upload" method="POST" enctype="multipart/form-data">
     <input type="file" name="image" required />
     <br>
@@ -68,8 +86,23 @@
   <% if (imageUrl) { %>
     <div class="image-link">
       <p><strong>Image URL:</strong></p>
-      <a href="<%= imageUrl %>" target="_blank"><%= imageUrl %></a>
+      <input type="text" id="imageUrl" value="<%= imageUrl %>" readonly />
+      <button class="copy-btn" onclick="copyURL()">Copy</button>
+      <p id="copiedMsg" class="copied-msg">Copied!</p>
     </div>
+
+    <script>
+      function copyURL() {
+        const urlInput = document.getElementById('imageUrl');
+        urlInput.select();
+        urlInput.setSelectionRange(0, 99999); // For mobile devices
+        document.execCommand("copy");
+
+        const msg = document.getElementById('copiedMsg');
+        msg.style.display = 'inline';
+        setTimeout(() => { msg.style.display = 'none'; }, 2000);
+      }
+    </script>
   <% } %>
 </body>
 </html>
